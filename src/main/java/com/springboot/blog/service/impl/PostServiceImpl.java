@@ -6,6 +6,7 @@ import com.springboot.blog.payload.PostDTO;
 import com.springboot.blog.payload.PostResponse;
 import com.springboot.blog.repository.PostRepository;
 import com.springboot.blog.service.PostService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,26 +22,24 @@ import java.util.List;
 public class PostServiceImpl  implements PostService {
 
     private PostRepository postRepository;
+    private ModelMapper modelMapper;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository) {
+    public PostServiceImpl(PostRepository postRepository, ModelMapper modelMapper) {
         this.postRepository = postRepository;
+        this.modelMapper = modelMapper;
     }
 
+
+
+
     private Post mapintoPost (PostDTO postDTO){
-        Post post = new Post();
-        post.setTitle       (postDTO.getTitle());
-        post.setContent     (postDTO.getContent());
-        post.setDescription (postDTO.getDescription());
+        Post post=modelMapper.map(postDTO,Post.class);
         return post;
     }
 
     private PostDTO mapintoDto (Post post){
-        PostDTO postDTO= new PostDTO();
-        postDTO.setId          (post.getId());
-        postDTO.setContent     (post.getContent());
-        postDTO.setDescription (post.getDescription());
-        postDTO.setTitle       (post.getTitle());
+        PostDTO postDTO=modelMapper.map(post,PostDTO.class);
         return postDTO;
     }
 
@@ -66,6 +65,8 @@ public class PostServiceImpl  implements PostService {
         postList.forEach(post -> postDTOS.add(mapintoDto(post)));
         PostResponse postResponse= new PostResponse(postDTOS,pageNo+1,pageSize,
                                     posts.getTotalElements(),posts.getTotalPages(),posts.isLast());
+
+
         return postResponse;
     }
 
