@@ -87,7 +87,6 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentDto updateComment(long postId, CommentDto commentDto) {
         Comment comment = getComment(postId, commentDto.getId());
-        comment.setId(100100);
         comment.setName(commentDto.getName());
         comment.setBody(commentDto.getBody());
         comment.setEmail(commentDto.getEmail());
